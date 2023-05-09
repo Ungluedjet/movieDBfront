@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Center,
     Box,
@@ -9,13 +9,43 @@ import {
     Link,
     Button,
     Alert,
+    Checkbox,
+    Text,
 } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CryptoJS from 'crypto-js';
+import key from '../../../../key';
 
 const Login = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [saveUserCheck, setSaveUserCheck] = useState(true);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const checkData = async () => {
+            const storedData = await checkStore();
+            if (storedData) {
+
+            }
+        };
+        checkData();
+    }, []);
+
+    const checkStore = async () => {
+        try {
+            const value = await AsyncStorage.getItem('email')
+            if (value !== null) {
+                // valor encontrado
+                return value
+                }
+            } catch(e) {
+                console.log('Error al recuperar datos', e)
+                return false;
+            }
+        return false;
+    };
 
     const goToSignUp = () => {
         navigation.navigate('SignUp');
@@ -25,10 +55,32 @@ const Login = ({navigation}) => {
         navigation.navigate('app');
     };
 
-    const doLogin = () => {
+    const doLogin = async () => {
         setLoading(true);
+        // const emailCipher = await saveUserData(email);
+        // const passCipher = await saveUserData(password);
+
+        // if (saveUserCheck) {
+        //     await storeData('email',emailCipher);
+        //     await storeData('password',passCipher);
+        // }
+
         goToHome();
     };
+
+    const saveUserData = async (Text) => {
+        const cipherText = CryptoJS.AES.encrypt(Text, key).toString();
+        console.log('frase encriptada' + cipherText);
+        return cipherText;
+    };
+
+    const storeData = async (key, value) => {
+        try {
+          await AsyncStorage.setItem(key, value)
+        } catch (e) {
+          console.log('Error al almacenar datos', e)
+        }
+      }      
 
     return (
         <Center w="100%">
@@ -58,6 +110,8 @@ const Login = ({navigation}) => {
                     <FormControl>
                         <FormControl.Label>Email</FormControl.Label>
                         <Input
+                            testID='email'
+                            accessibilityLabel='email'
                             isDisabled={loading}
                             isInvalid={error}
                             value={email}
@@ -67,6 +121,8 @@ const Login = ({navigation}) => {
                     <FormControl>
                         <FormControl.Label>Password</FormControl.Label>
                         <Input
+                            testID='password'
+                            accessibilityLabel='password'
                             isDisabled={loading}
                             isInvalid={error}
                             value={password}
@@ -74,6 +130,13 @@ const Login = ({navigation}) => {
                             type="password"
                         />
                     </FormControl>
+                    <Checkbox
+                        value={saveUserCheck}
+                        onChange={setSaveUserCheck}
+                        defaultIsChecked={false}
+                        accessibilityLabel="This is a dummy checkbox" 
+                    />
+                    <Text>check if you want to keep your session</Text>
                     <Button
 
                         isDisabled={!email || !password || loading}
@@ -84,6 +147,7 @@ const Login = ({navigation}) => {
                         }}>
                         Sign In
                     </Button>
+                    
                     <Link onPress={() => goToSignUp()}>
                         not an User?, Sign Up now!!!
                     </Link>

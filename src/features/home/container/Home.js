@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native';
 import {
     ScrollView,
     View,
+    Left,
     FlatList,
     Center,
     Skeleton,
@@ -18,14 +19,13 @@ import startPopularList from '../actions/popularList';
 const Home = ({navigation}) => {
     const myRef = React.useRef(null);
     const dispatch = useDispatch();
-    const {popularList} = useSelector(state => state);
+    const { popularList } = useSelector(state => state);
 
     useEffect(() => {
         startPopularList(dispatch);
     }, []);
 
     useEffect(() => {
-        console.log('secargolawea');
         console.log(JSON.stringify(popularList));
     }, [popularList]);
 
@@ -60,44 +60,47 @@ const Home = ({navigation}) => {
     );
 
     const renderBody = () => (
-        <Center>
-            <ScrollView>
-                <FlatList
-                    data={popularList.data.results}
-                    keyExtractor={(item, index) => item + index}
-                    renderItem={item => (
-                        <Box
-                            borderBottomWidth="1"
-                            _dark={{
-                                borderColor: 'muted.50',
-                            }}
+        <View flex={1}>
+            <FlatList
+                flex={1}
+                data={popularList.data.results}
+                keyExtractor={(item, index) => item + index}
+                renderItem={item => (
+                    <Box
+                        borderBottomWidth="1"
+                        _dark={{
+                            borderColor: 'muted.50',
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() =>
+                                navigation.navigate('Details', item.item)
+                            }
                         >
-                            <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate('Details', item.item)
-                                }
-                            >
-                                <Center>
-                                    <Image
-                                        ref={myRef}
-                                        source={{
-                                            uri:
-                                                'https://image.tmdb.org/t/p/w500' +
-                                                item.item.poster_path,
-                                        }}
-                                        alt="Alternate Text"
-                                        size="xl"
-                                    />
-                                    <Text>{item.item.original_title}</Text>
-                                </Center>
-                            </TouchableOpacity>
-                        </Box>
-                    )}
-                />
-            </ScrollView>
-        </Center>
+                            <Center flex={1}>
+                                <Image
+                                    ref={myRef}
+                                    source={{
+                                        uri:
+                                            'https://image.tmdb.org/t/p/w500' +
+                                            item.item.poster_path,
+                                    }}
+                                    alt="Alternate Text"
+                                    size="xl"
+                                />
+                                <Text
+                                    accessibilityLabel={item.item.original_title}
+                                    testId={item.item.original_title}
+                                >{item.item.original_title}</Text>
+                            </Center>
+                        </TouchableOpacity>
+                    </Box>
+                )}
+                style={{ flex: 1 }}
+            />
+        </View>
     );
-
+    
     return popularList.success ? renderBody() : renderSkeleton();
 };
 

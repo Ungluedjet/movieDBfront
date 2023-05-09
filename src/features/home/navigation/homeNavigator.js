@@ -9,7 +9,7 @@ function HomeNavigator() {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Home"
+                name="HomeDrawer"
                 component={DrawerNavigator}
                 options={{headerShown: false}}
             />
