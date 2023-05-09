@@ -4,7 +4,6 @@ import {TouchableOpacity} from 'react-native';
 import {
     ScrollView,
     View,
-    Left,
     FlatList,
     Center,
     Skeleton,
@@ -77,22 +76,25 @@ const Home = ({navigation}) => {
                                 navigation.navigate('Details', item.item)
                             }
                         >
-                            <Center flex={1}>
-                                <Image
-                                    ref={myRef}
-                                    source={{
-                                        uri:
-                                            'https://image.tmdb.org/t/p/w500' +
-                                            item.item.poster_path,
-                                    }}
-                                    alt="Alternate Text"
-                                    size="xl"
-                                />
+                        <View style={{flexDirection: 'row'}}>
+                            <Image
+                                ref={myRef}
+                                source={{
+                                uri: 'https://image.tmdb.org/t/p/w500' + item.item.poster_path,
+                                }}
+                                alt="Alternate Text"
+                                size="xl"
+                            />
+                            <View style={{marginLeft: 10}}>
                                 <Text
-                                    accessibilityLabel={item.item.original_title}
-                                    testId={item.item.original_title}
-                                >{item.item.original_title}</Text>
-                            </Center>
+                                accessibilityLabel={item.item.original_title}
+                                testId={item.item.original_title}
+                                >
+                                {item.item.original_title}
+                                </Text>
+                                <Text>{item.item.overview}</Text>
+                            </View>
+                        </View>
                         </TouchableOpacity>
                     </Box>
                 )}
