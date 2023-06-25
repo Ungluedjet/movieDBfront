@@ -16,7 +16,7 @@ const SignUp = ({navigation}) => {
     const [confPassword, setConfPassword] = useState('');
 
     const btnSignUp = () => {
-        console.log('momazos mauro');
+        
     };
 
     return (

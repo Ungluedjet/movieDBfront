@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
 
             }
         };
-        checkData();
+        const resultData = checkData();
     }, []);
 
     const checkStore = async () => {
@@ -41,7 +41,6 @@ const Login = ({navigation}) => {
                 return value
                 }
             } catch(e) {
-                console.log('Error al recuperar datos', e)
                 return false;
             }
         return false;
@@ -70,7 +69,6 @@ const Login = ({navigation}) => {
 
     const saveUserData = async (Text) => {
         const cipherText = CryptoJS.AES.encrypt(Text, key).toString();
-        console.log('frase encriptada' + cipherText);
         return cipherText;
     };
 
@@ -78,7 +76,7 @@ const Login = ({navigation}) => {
         try {
           await AsyncStorage.setItem(key, value)
         } catch (e) {
-          console.log('Error al almacenar datos', e)
+
         }
       }      
 
